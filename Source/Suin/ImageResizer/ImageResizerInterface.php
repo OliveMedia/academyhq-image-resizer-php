@@ -5,12 +5,6 @@ namespace Suin\ImageResizer;
 interface ImageResizerInterface
 {
 	/**
-	 * Return new ImageResizer object
-	 * @param string $filename Image file name to resize
-	 */
-	public function __construct($filename);
-
-	/**
 	 * Set max width
 	 * @param int $width Max width(pixel)
 	 * @return $this Must return self instance
