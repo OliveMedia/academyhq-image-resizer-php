@@ -203,8 +203,8 @@ class ImageResizer implements \Suin\ImageResizer\ImageResizerInterface
 		$scale = min($scales);
 
 		return array(
-			'width'  => intval($this->originalWidth * $scale),
-			'height' => intval($this->originalHeight * $scale),
+			'width'  => intval($this->maxWidth),
+			'height' => intval($this->maxHeight),
 		);
 	}
 }
