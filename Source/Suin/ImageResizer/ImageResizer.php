@@ -120,7 +120,7 @@ class ImageResizer implements \Suin\ImageResizer\ImageResizerInterface
 				throw new RuntimeException(sprintf("Not supported type of image: %s", $this->filename));
 		}
 
-		$canvas = imagecreatetruecolor($newSize['width'], $newSize['height']); // Requires GD 2.0.28 or later
+		$canvas = imagecreatetruecolor($this->maxWidth, $this->maxHeight); // Requires GD 2.0.28 or later
 
 		// Check if this image is PNG or GIF, then set if Transparent
 		if ( $this->type === IMAGETYPE_PNG or $this->type === IMAGETYPE_GIF )
@@ -131,7 +131,7 @@ class ImageResizer implements \Suin\ImageResizer\ImageResizerInterface
 			imagefilledrectangle($canvas, 0, 0, $newSize['width'], $newSize['height'], $transparent);
 		}
 
-		if ( imagecopyresampled($canvas, $source, 0, 0, 0, 0, $newSize['width'], $newSize['height'], $this->originalWidth, $this->originalHeight) === false )
+		if ( imagecopyresampled($canvas, $source, 0 - ($newSize['width'] - $this->maxWidth) / 2, 0 - ($newSize['height'] - $this->maxHeight) / 2, 0, 0, $newSize['width'], $newSize['height'], $this->originalWidth, $this->originalHeight) === false )
 		{
 			return false;
 		}
@@ -180,31 +180,29 @@ class ImageResizer implements \Suin\ImageResizer\ImageResizerInterface
 	 */
 	protected function _calculateNewSizeByMaxSize()
 	{
-		$scales = array();
 
-		if ( $this->maxWidth > 0 )
-		{
-			$scales[] = $this->maxWidth / $this->originalWidth;
+		$width_scale = $this->maxWidth / $this->originalWidth;
+		$height_scale = $this->maxHeight / $this->originalHeight;
+
+		if($width_scale > $height_scale) {
+
+			$scaled_width = $this->maxWidth;
+			$scaled_height = $this->originalHeight/$this->originalWidth * $this->maxWidth; 
+
+		} elseif($height_scale > $width_scale) {
+
+			$scaled_width = $this->originalWidth/$this->originalHeight * $this->maxHeight;
+			$scaled_height = $this->maxHeight;
+
+		} elseif($width_scale == $height_scale) {
+
+			$scaled_height = $this->maxHeight;
+			$scaled_width = $this->maxWidth;
 		}
-
-		if ( $this->maxHeight > 0 )
-		{
-			$scales[] = $this->maxHeight / $this->originalHeight;
-		}
-
-		if ( count($scales) === 0 )
-		{
-			return array(
-				'width'  => $this->originalWidth,
-				'height' => $this->originalHeight,
-			);
-		}
-
-		$scale = min($scales);
 
 		return array(
-			'width'  => intval($this->maxWidth),
-			'height' => intval($this->maxHeight),
+			'width'  => $scaled_width,
+			'height' => $scaled_height,
 		);
 	}
 }
