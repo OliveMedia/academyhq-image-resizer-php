@@ -186,13 +186,27 @@ class ImageResizer implements \Suin\ImageResizer\ImageResizerInterface
 
 		if($width_scale > $height_scale) {
 
-			$scaled_width = $this->maxWidth;
-			$scaled_height = $this->originalHeight/$this->originalWidth * $this->maxWidth; 
+			if($width_scale <= 1) {
+				$scaled_width = $this->maxWidth;
+				$scaled_height = $this->originalHeight/$this->originalWidth * $this->maxWidth;
+			} else {
+
+				$scaled_width = $this->originalWidth;
+				$this->maxWidth = $this->originalWidth;
+				$scaled_height = $this->originalHeight/$this->originalWidth * $this->maxWidth;
+			}
 
 		} elseif($height_scale > $width_scale) {
 
-			$scaled_width = $this->originalWidth/$this->originalHeight * $this->maxHeight;
-			$scaled_height = $this->maxHeight;
+			if($height_scale <= 1) {
+				$scaled_width = $this->originalWidth/$this->originalHeight * $this->maxHeight;
+				$scaled_height = $this->maxHeight;
+			} else {
+
+				$scaled_height = $this->originalHeight;
+				$this->maxHeight = $this->originalHeight;
+				$scaled_width = $this->originalWidth/$this->originalHeight * $this->maxHeight;
+			}
 
 		} elseif($width_scale == $height_scale) {
 
