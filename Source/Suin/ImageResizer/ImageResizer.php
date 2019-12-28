@@ -34,29 +34,29 @@ class ImageResizer implements \Suin\ImageResizer\ImageResizerInterface
 	 */
 	public function __construct($filename)
 	{
-		if ( is_file($filename) === false )
+		if ( is_file($filename) == false )
 		{
 			throw new RuntimeException(sprintf("No such file: %s", $filename));
 		}
 
-		if ( is_readable($filename) === false )
+		if ( is_readable($filename) == false )
 		{
 			throw new RuntimeException(sprintf("Not readable: %s", $filename));
 		}
 
-		if ( is_writable($filename) === false )
+		if ( is_writable($filename) == false )
 		{
 			throw new RuntimeException(sprintf("Not writable: %s", $filename));
 		}
 
 		$info = @getimagesize($filename);
 
-		if ( $info === false )
+		if ( $info == false )
 		{
 			throw new RuntimeException(sprintf("Not supported type of image: %s", $filename));
 		}
 
-		if ( in_array($info[2], static::$supportTypes) === false )
+		if ( in_array($info[2], static::$supportTypes) == false )
 		{
 			throw new RuntimeException(sprintf("Not supported type of image: %s", $filename));
 		}
@@ -97,7 +97,7 @@ class ImageResizer implements \Suin\ImageResizer\ImageResizerInterface
 	 */
 	public function resize()
 	{
-		if ( $this->_needsResize() === false )
+		if ( $this->_needsResize() == false )
 		{
 			return true;
 		}
@@ -123,7 +123,7 @@ class ImageResizer implements \Suin\ImageResizer\ImageResizerInterface
 		$canvas = imagecreatetruecolor($this->maxWidth, $this->maxHeight); // Requires GD 2.0.28 or later
 
 		// Check if this image is PNG or GIF, then set if Transparent
-		if ( $this->type === IMAGETYPE_PNG or $this->type === IMAGETYPE_GIF )
+		if ( $this->type == IMAGETYPE_PNG or $this->type == IMAGETYPE_GIF )
 		{
 			imagealphablending($canvas, false);
 			imagesavealpha($canvas, true);
@@ -131,7 +131,7 @@ class ImageResizer implements \Suin\ImageResizer\ImageResizerInterface
 			imagefilledrectangle($canvas, 0, 0, $newSize['width'], $newSize['height'], $transparent);
 		}
 
-		if ( imagecopyresampled($canvas, $source, 0 - ($newSize['width'] - $this->maxWidth) / 2, 0 - ($newSize['height'] - $this->maxHeight) / 2, 0, 0, $newSize['width'], $newSize['height'], $this->originalWidth, $this->originalHeight) === false )
+		if ( imagecopyresampled($canvas, $source, 0 - ($newSize['width'] - $this->maxWidth) / 2, 0 - ($newSize['height'] - $this->maxHeight) / 2, 0, 0, $newSize['width'], $newSize['height'], $this->originalWidth, $this->originalHeight) == false )
 		{
 			return false;
 		}

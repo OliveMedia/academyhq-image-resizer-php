@@ -13,7 +13,7 @@ class ImageResizerWithoutCropping extends ImageResizer {
 
 	public function resize()
 	{
-		if ( $this->_needsResize() === false )
+		if ( $this->_needsResize() == false )
 		{
 			return true;
 		}
@@ -39,7 +39,7 @@ class ImageResizerWithoutCropping extends ImageResizer {
 		$canvas = imagecreatetruecolor($this->maxWidth, $this->maxHeight); // Requires GD 2.0.28 or later
 
 		// Check if this image is PNG or GIF, then set if Transparent
-		if ( $this->type === IMAGETYPE_PNG or $this->type === IMAGETYPE_GIF )
+		if ( $this->type == IMAGETYPE_PNG or $this->type == IMAGETYPE_GIF )
 		{
 			imagealphablending($canvas, false);
 			imagesavealpha($canvas, true);
@@ -47,7 +47,7 @@ class ImageResizerWithoutCropping extends ImageResizer {
 			imagefilledrectangle($canvas, 0, 0, $newSize['width'], $newSize['height'], $transparent);
 		}
 
-		if ( imagecopyresampled($canvas, $source, 0, 0, 0, 0, $newSize['width'], $newSize['height'], $this->originalWidth, $this->originalHeight) === false )
+		if ( imagecopyresampled($canvas, $source, 0, 0, 0, 0, $newSize['width'], $newSize['height'], $this->originalWidth, $this->originalHeight) == false )
 		{
 			return false;
 		}
